@@ -1,84 +1,121 @@
 from flask import Flask
+import json
+import math
+import periodictable as ptable
 app = Flask(__name__)
-@app.route('/default/<int:name>')
-def hello_world(name):
-    return str(name * 4)
 
-@app.route('/a')
+@app.route('/default/<float:name>')
+def hello_world(name):
+    response = {}
+    response["ne"]="dsfsdfds"
+    response["names"]="dsfsdfds"
+    response["namesss"]="dsfsdfds"
+    response["namessss"]="dsfsdfds"
+    #dict = {"name":name*4};
+    return response;
+    ##return str(name * 4)
+
 def get_SB():
-	return 5.670373e-8
-	
-@app.route('/appstuff')
+    return 5.670373e-8
+    
 def get_G():
-	G = 6.6740e-11
-	return G
+    G = 6.6740e-11
+    return G
 
 def get_WC():
-	WC = 2.828e-3
-	return WC
+    WC = 2.828e-3
+    return WC
 
-@app.route('/return_tempS')
-def return_tempS(lumi,radS): 
+@app.route('/return_tempS/<float:lumi>/<float:radS>')
+def return_tempS(lumi,radS):
   tempS = (lumi/(4*(math.pi)*(radS**2)* get_WC()))**(1/4)
-  return tempS
+  #return str(tempS)
+  response = {}
+  response["tempS"]=tempS
+  return response
 
-def return_tempP(dist,bAlb,lumi): 
+@app.route('/return_tempP/<float:dist>/<float:bAlb>/<float:lumi>')
+def return_tempP(dist,bAlb,lumi):
   tempP = ((lumi*(1-bAlb))/((16*(math.pi))*(dist**2)*get_SB())) ** (1/4)
-  return tempP
+  response = {}
+  response["tempP"]=tempP
+  return response
 
 # lumi in relation to temp, dist, bAlbedo, (SB)
-
-def return_lumi(tempP,dist,bAlb): 
+@app.route('/return_lumi/<float:tempP>/<float:dist>/<float:bAlb>')
+def return_lumi(tempP,dist,bAlb):
   lumi = ((16*(math.pi))*(dist**2)*get_SB()*(tempP**4)) / (1-bAlb)
-  return lumi
+  #return str(lumi)
+  response = {}
+  response["lumi"]=lumi
+  return response
 
 # bAlb in relation to temp, dist, lumi
-
+@app.route('/return_bAlb/<float:tempP>/<float:dist>/<float:lumi>')
 def return_bAlb(tempP,dist,lumi):
   if ((((-16*(math.pi))*(dist**2)*get_SB()*(tempP**4))/(lumi))+1) < 0 or ((((-16*(math.pi))*(dist**2)*get_SB()*(tempP**4))/(lumi))+1) > 100:
-    print("Error, impossi boule")
+    return "Must be an element of [0,100]"
   else:
     bAlb = ((((-16*(math.pi))*(dist**2)*get_SB()*(tempP**4))/(lumi))+1)
-    return bAlb
+    response = {}
+    response["bAlb"]=bAlb
+    return response
 
 # dist in relation to temp, lumi, bAlb
-
+@app.route('/return_dist/<float:tempP>/<float:lumi>/<float:bAlb>')
 def return_dist(tempP,lumi,bAlb):
-  dist = ((lumi*(1-bAlb))/((16*(math.pi))*(tempP**4)*get_SB())) ** (1/2)
-  return dist
+  dist = (((lumi*(1-bAlb))/((16*(math.pi))*(tempP**4)*get_SB())) ** (1/2)) / 1.496e11
+  #return str(dist)
+  response = {}
+  response["dist"]=dist
+  return response
 
 # Calculating Radiation Energy of star
-
+@app.route('/return_Elambda/<float:tempS>')
 def return_Elambda(tempS):
   Elambda = get_SB()*(tempS**4)
-  return Elambda
+  #return str(Elambda)
+  response = {}
+  response["Elambda"]=Elambda
+  return response
 
 # Calculating Dominant Wavelength
-
+@app.route('/return_domLambda/<float:tempS>')
 def return_domLambda(tempS):
   # 2.898 x 10 -3 meter-kelvin
-  
+ 
   domLambda = float(get_WC()/tempS)
-  return domLambda
+  #return str(domLambda)
+  response = {}
+  response["domLambda"]=domLambda
+  return response
 
 # Gravity on the planet
 
 # massT = test mass
 # massP = mass of the planet
 # radP = radius of the planet
-
+@app.route('/return_gravity/<float:massT>/<float:massP>/<float:radP>')
 def return_gravity(massT,massP,radP):
   forceGrav = float((get_G() * massT * massP) / (radP**2))
-  return forceGrav
+  #return str(forceGrav)
+  response = {}
+  response["forceGrav"]=forceGrav
+  return response
 
 # Gravitational Field
 
+@app.route('/habitable/<float:massP>/<float:radP>/')
 def return_gField(massP,radP):
   gField = float((get_G() * massP) / (radP**2))
-  return gField
+  #return str(gField)
+  response = {}
+  response["gField"]=gField
+  return response
 
 # Star Color
 
+@app.route('/starcolor/<float:tempS>')
 def return_colorS(tempS):
   
   if tempS <= 3000:
@@ -91,16 +128,20 @@ def return_colorS(tempS):
     colorS = 'White'
   else:
     colorS = 'Blue'
+  #return colorS
+  response = {}
+  response["colorS"]=colorS
+  response["wlength"]=wlength
+  return response
 
-# Inner habitable zone radius - function of lumi
+# Habitable zone delimitations
 
-def return_innerHab(lumi):
+@app.route('/habitable/<float:lumi>')
+def return_habitable(lumi):
   innerHab = (lumi/1.1) ** 1/2
-  return innerHab
-
-# Outer habitable zone radius
-
-def return_outerHab(lumi):
   outerHab = (lumi/0.53) ** 1/2
-  
-  return outerHab
+  #return 'The habitable zone is between ' + str(innerHab) + ' meters and ' + str(outerHab) + ' meters'
+  response = {}
+  response["innerHab"]=innerHab
+  response["outerHab"]=outerHab
+  return response
