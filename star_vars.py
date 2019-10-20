@@ -28,10 +28,13 @@ def get_WC():
 
 @app.route('/return_tempS/<float:lumi>/<float:radS>')
 def return_tempS(lumi,radS):
-  tempS = (lumi/(4*(math.pi)*(radS**2)* get_WC()))**(1/4)
+  tempS = (lumi/(4*(math.pi)*(radS**2)* get_WC()))**(4)
   #return str(tempS)
+  colorS = return_colorS(tempS)
   response = {}
   response["tempS"]=tempS
+  response["colorS"]=colorS
+  
   return response
 
 @app.route('/return_tempP/<float:dist>/<float:bAlb>/<float:lumi>')
@@ -79,7 +82,7 @@ def return_Elambda(tempS):
   response["Elambda"]=Elambda
   return response
 
-# Calculating Dominant Wavelength
+# Calculating Dominant Wavelength (color)
 @app.route('/return_domLambda/<float:tempS>')
 def return_domLambda(tempS):
   # 2.898 x 10 -3 meter-kelvin
@@ -129,11 +132,13 @@ def return_colorS(tempS):
   else:
     colorS = 'Blue'
   #return colorS
+  """
   response = {}
   response["colorS"]=colorS
   response["wlength"]=wlength
   return response
-
+  """
+  return colorS
 # Habitable zone delimitations
 
 @app.route('/habitable/<float:lumi>')
