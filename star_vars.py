@@ -40,8 +40,10 @@ def return_tempS(lumi,radS):
 @app.route('/return_tempP/<float:dist>/<float:bAlb>/<float:lumi>')
 def return_tempP(dist,bAlb,lumi):
   tempP = ((lumi*(1-bAlb))/((16*(math.pi))*(dist**2)*get_SB())) ** (1/4)
+  colorP = return_colorP(tempP)
   response = {}
   response["tempP"]=tempP
+  response["colorP"]=colorP
   return response
 
 # lumi in relation to temp, dist, bAlbedo, (SB)
@@ -115,6 +117,22 @@ def return_gField(massP,radP):
   response = {}
   response["gField"]=gField
   return response
+
+# Planet Color
+@app.route('/planetcolor/<float:tempP>')
+def return_colorP(tempP):
+  if tempP <= 200:
+    colorP = 'Blue'
+  elif 200 < tempP < 500:
+    colorP = 'Brown'
+  elif 500 < tempP < 1000:
+    colorP = 'Red'
+  elif 1000 < tempP < 10000:
+    colorP = 'Yellow'
+  else:
+    colorP = 'White'
+  return colorP
+
 
 # Star Color
 
