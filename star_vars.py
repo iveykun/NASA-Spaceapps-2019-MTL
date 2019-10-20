@@ -28,7 +28,7 @@ def get_WC():
 
 @app.route('/return_tempS/<float:lumi>/<float:radS>')
 def return_tempS(lumi,radS):
-  tempS = (lumi/(4*(math.pi)*(radS**2)* get_WC()))**(4)
+  tempS = (lumi/(4*(math.pi)*(radS**2)* get_WC()))**(1/4)
   #return str(tempS)
   colorS = return_colorS(tempS)
   response = {}
@@ -69,7 +69,7 @@ def return_bAlb(tempP,dist,lumi):
 # dist in relation to temp, lumi, bAlb
 @app.route('/return_dist/<float:tempP>/<float:lumi>/<float:bAlb>')
 def return_dist(tempP,lumi,bAlb):
-  dist = (((lumi*(1-bAlb))/((16*(math.pi))*(tempP**4)*get_SB())) ** (1/2)) / 1.496e11
+  dist = (((lumi*(1-bAlb))/((16*(math.pi))*(tempP**4)*get_SB())) ** (1/2)) / (1.496e11)
   #return str(dist)
   response = {}
   response["dist"]=dist
@@ -130,7 +130,7 @@ def return_colorP(tempP):
   elif 1000 < tempP < 10000:
     colorP = 'Yellow'
   else:
-    colorP = 'White'
+    colorP = '#DADA4A'
   return colorP
 
 
