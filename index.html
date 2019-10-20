@@ -1,0 +1,58 @@
+<html lang="en">
+<head>
+    <title>Build Planet</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="css/custom.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="col-lg-6 star">
+                <div class="flash" id="starFlash">
+                    <div id="createdStar" style="height: 70%;"></div>
+                </div>
+                <hr/>
+                <p>Star Controls</p>
+                <input type="button" id="starBtn" class="btn btn-danger" value="See Change"/>
+                <br/>
+                <div class="controls" id="starControlsDiv"></div>
+            </div>
+            <div class="col-lg-6 planet">
+                <div class="flash" id="planetFlash">
+                    <div id="createdPlanet" style="height: 70%;"></div>
+                </div>
+                <hr/>
+                <p>Planet Controls</p>
+                <input type="button" id="planetBtn" class="btn btn-warning" value="See Change"/>
+                <br/>
+                <div class="controls" id="planetControlsDiv">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="js/p5.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+<script src="js/custom.js"></script>
+<script>
+    let p5StarSketch,p5PlanetSketch;
+    $(document).ready(function () {
+        startGeneratingStarView();
+        startGeneratingPlanetView();
+        p5StarSketch = new p5(starSketch, 'createdStar');
+        p5PlanetSketch = new p5(planetSketch, 'createdPlanet');
+    });
+    $("#starBtn,#planetBtn").on("click", function () {
+        callTheApi().then(value => {
+        }).finally(() => {
+
+        });
+    });
+</script>
+
+</body>
+</html>

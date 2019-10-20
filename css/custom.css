@@ -1,0 +1,30 @@
+body {
+    /*background: lightblue !important;*/
+    background: url("https://www5.lunapic.com/editor/working/157159973336377599?19831") !important;
+}
+
+label,p {
+    color: white;
+}
+
+div.planet, div.star {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.flash {
+    flex: 6;
+    margin-top: 5px;
+    background-color: black;
+}
+
+.controls {
+    flex: 4;
+}
+
+p {
+    font-weight: bolder;
+    text-decoration: underline;
+    text-align: center;
+}
